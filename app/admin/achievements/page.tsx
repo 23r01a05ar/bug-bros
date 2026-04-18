@@ -60,13 +60,7 @@ export default function AdminAchievementsPage() {
       badge_url: ach.badge_url || '',
       date: ach.date || '',
     });
-    const supabase = createClient();
-    const { data } = await supabase
-  .from('achievements')
-  .select('participants')
-  .eq('id', achievement.id)
-  .single();
-setParticipants(data?.participants || []);
+    setParticipants(ach.participants || []);
     setModalOpen(true);
   }
 
@@ -77,32 +71,25 @@ setParticipants(data?.participants || []);
     try {
       if (editing) {
         const { error } = await supabase.from('achievements').update({
-          title: form.title, description: form.description || null,
-          type: form.type, badge_url: form.badge_url || null, date: form.date || null,
+          title: form.title,
+          description: form.description || null,
+          type: form.type,
+          badge_url: form.badge_url || null,
+          date: form.date || null,
+          participants: participants,
         }).eq('id', editing.id);
         if (error) throw error;
-
-        await supabase.from('participants').delete().eq('achievement_id', editing.id);
-        if (participants.length > 0) {
-          await supabase.from('participants').insert(
-            participants.map((uid) => ({ achievement_id: editing.id, user_id: uid }))
-          );
-        }
         showToast('Achievement updated', 'success');
       } else {
-        const { data: newAch, error } = await supabase.from('achievements')
-          .insert({
-            title: form.title, description: form.description || null,
-            type: form.type, badge_url: form.badge_url || null, date: form.date || null,
-          })
-          .select().single();
+        const { error } = await supabase.from('achievements').insert({
+          title: form.title,
+          description: form.description || null,
+          type: form.type,
+          badge_url: form.badge_url || null,
+          date: form.date || null,
+          participants: participants,
+        });
         if (error) throw error;
-
-        if (participants.length > 0 && newAch) {
-          await supabase.from('participants').insert(
-            participants.map((uid) => ({ achievement_id: newAch.id, user_id: uid }))
-          );
-        }
         showToast('Achievement created', 'success');
       }
 
