@@ -61,8 +61,12 @@ export default function AdminAchievementsPage() {
       date: ach.date || '',
     });
     const supabase = createClient();
-    const { data } = await supabase.from('participants').select('user_id').eq('achievement_id', ach.id);
-    setParticipants(data?.map((p) => p.user_id) || []);
+    const { data } = await supabase
+  .from('achievements')
+  .select('participants')
+  .eq('id', achievement.id)
+  .single();
+setParticipants(data?.participants || []);
     setModalOpen(true);
   }
 
