@@ -34,7 +34,7 @@ export default function AdminAchievementsPage() {
   useEffect(() => { fetchData(); }, []);
 
   async function fetchData() {
-    const supabase = createClient();
+    const supabase = createClient() as any;
     const [{ data: ach }, { data: users }] = await Promise.all([
       supabase.from('achievements').select('*').order('date', { ascending: false }),
       supabase.from('users').select('*').eq('is_active', true),
@@ -60,7 +60,7 @@ export default function AdminAchievementsPage() {
       badge_url: ach.badge_url || '',
       date: ach.date || '',
     });
-    const supabase = createClient();
+    const supabase = createClient() as any;
     const { data } = await supabase
       .from('participants')
       .select('user_id')
@@ -71,7 +71,7 @@ export default function AdminAchievementsPage() {
 
   async function handleSave() {
     if (!form.title) { showToast('Title is required', 'error'); return; }
-    const supabase = createClient();
+    const supabase = createClient() as any;
 
     try {
       if (editing) {

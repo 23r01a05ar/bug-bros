@@ -67,7 +67,7 @@ export default function AdminExperiencesPage() {
       showToast('User, title, company, and start date are required', 'error');
       return;
     }
-    const supabase = createClient();
+    const supabase = createClient() as any;
 
     try {
       const payload = {
