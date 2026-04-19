@@ -60,7 +60,12 @@ export default function AdminAchievementsPage() {
       badge_url: ach.badge_url || '',
       date: ach.date || '',
     });
-    setParticipants(ach.participants || []);
+    const supabase = createClient();
+    const { data } = await supabase
+      .from('participants')
+      .select('user_id')
+      .eq('achievement_id', ach.id);
+    setParticipants(data?.map((p: { user_id: string }) => p.user_id) || []);
     setModalOpen(true);
   }
 
@@ -76,20 +81,35 @@ export default function AdminAchievementsPage() {
           type: form.type,
           badge_url: form.badge_url || null,
           date: form.date || null,
-          participants: participants,
         }).eq('id', editing.id);
         if (error) throw error;
+
+        await supabase.from('participants').delete().eq('achievement_id', editing.id);
+        if (participants.length > 0) {
+          await supabase.from('participants').insert(
+            participants.map((uid) => ({ achievement_id: editing.id, user_id: uid }))
+          );
+        }
         showToast('Achievement updated', 'success');
       } else {
-        const { error } = await supabase.from('achievements').insert({
-          title: form.title,
-          description: form.description || null,
-          type: form.type,
-          badge_url: form.badge_url || null,
-          date: form.date || null,
-          participants: participants,
-        });
+        const { data: newAch, error } = await supabase
+          .from('achievements')
+          .insert({
+            title: form.title,
+            description: form.description || null,
+            type: form.type,
+            badge_url: form.badge_url || null,
+            date: form.date || null,
+          })
+          .select()
+          .single();
         if (error) throw error;
+
+        if (participants.length > 0 && newAch) {
+          await supabase.from('participants').insert(
+            participants.map((uid) => ({ achievement_id: newAch.id, user_id: uid }))
+          );
+        }
         showToast('Achievement created', 'success');
       }
 
@@ -103,6 +123,7 @@ export default function AdminAchievementsPage() {
   async function handleDelete(id: string) {
     const supabase = createClient();
     try {
+      await supabase.from('participants').delete().eq('achievement_id', id);
       const { error } = await supabase.from('achievements').delete().eq('id', id);
       if (error) throw error;
       showToast('Achievement deleted', 'success');
