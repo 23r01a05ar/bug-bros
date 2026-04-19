@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { Users, FolderKanban, Trophy, MessageSquare } from 'lucide-react';
 
 export default async function AdminDashboard() {
-  const supabase = await createClient();
+  const supabase = await createClient() as any;
 
   const [
     { count: membersCount },
@@ -75,7 +75,7 @@ export default async function AdminDashboard() {
         </h2>
         {recentMessages && recentMessages.length > 0 ? (
           <div className="space-y-3">
-            {recentMessages.map((msg) => (
+            {recentMessages.map((msg: any) => (
               <div key={msg.id} className="card p-4 flex items-start gap-4">
                 <div
                   className={`w-2 h-2 rounded-full mt-2 shrink-0 ${
