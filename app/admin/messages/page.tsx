@@ -29,13 +29,13 @@ export default function AdminMessagesPage() {
   }
 
   async function markAsRead(id: string) {
-    const supabase = createClient();
+    const supabase = createClient() as any;
     await supabase.from('contact_messages').update({ is_read: true }).eq('id', id);
     fetchMessages();
   }
 
   async function handleDelete(id: string) {
-    const supabase = createClient();
+    const supabase = createClient() as any;
     try {
       const { error } = await supabase.from('contact_messages').delete().eq('id', id);
       if (error) throw error;

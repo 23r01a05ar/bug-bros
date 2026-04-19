@@ -38,7 +38,7 @@ export default function AdminProjectsPage() {
   useEffect(() => { fetchData(); }, []);
 
   async function fetchData() {
-    const supabase = createClient();
+    const supabase = createClient() as any;
     const [{ data: proj }, { data: users }] = await Promise.all([
       supabase.from('projects').select('*').order('created_at', { ascending: false }),
       supabase.from('users').select('*').eq('is_active', true),
@@ -71,7 +71,7 @@ export default function AdminProjectsPage() {
       screenshots: project.screenshots || [],
       is_featured: project.is_featured,
     });
-    const supabase = createClient()as any;
+    const supabase = createClient() as any;
     const { data } = await supabase
       .from('contributors')
       .select('user_id')
@@ -150,7 +150,7 @@ export default function AdminProjectsPage() {
   }
 
   async function handleDelete(id: string) {
-    const supabase = createClient();
+    const supabase = createClient()as any;
     try {
       await supabase.from('contributors').delete().eq('project_id', id);
       const { error } = await supabase.from('projects').delete().eq('id', id);
