@@ -81,13 +81,13 @@ export default function AdminAchievementsPage() {
           type: form.type,
           badge_url: form.badge_url || null,
           date: form.date || null,
-        }).eq('id', editing.id);
+        } as any).eq('id', editing.id);
         if (error) throw error;
 
         await supabase.from('participants').delete().eq('achievement_id', editing.id);
         if (participants.length > 0) {
           await supabase.from('participants').insert(
-            participants.map((uid) => ({ achievement_id: editing.id, user_id: uid }))
+            participants.map((uid) => ({ achievement_id: editing.id, user_id: uid })) as any
           );
         }
         showToast('Achievement updated', 'success');
@@ -100,14 +100,14 @@ export default function AdminAchievementsPage() {
             type: form.type,
             badge_url: form.badge_url || null,
             date: form.date || null,
-          })
+          } as any)
           .select()
           .single();
         if (error) throw error;
 
         if (participants.length > 0 && newAch) {
           await supabase.from('participants').insert(
-            participants.map((uid) => ({ achievement_id: newAch.id, user_id: uid }))
+            participants.map((uid) => ({ achievement_id: newAch.id, user_id: uid })) as any
           );
         }
         showToast('Achievement created', 'success');
