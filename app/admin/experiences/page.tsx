@@ -173,3 +173,24 @@ export default function AdminExperiencesPage() {
             )}
           </div>
           <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
+            <input type="checkbox" id="is_current" checked={form.is_current} onChange={(e) => setForm({ ...form, is_current: e.target.checked })} className="w-4 h-4" />
+            <label htmlFor="is_current" className="text-sm font-medium">Currently working here</label>
+          </div>
+        </div>
+        <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-[var(--color-border)] dark:border-[var(--color-dark-border)]">
+          <Button variant="outline" onClick={() => setModalOpen(false)}>Cancel</Button>
+          <Button variant="primary" onClick={handleSave}>{editing ? 'Save Changes' : 'Create'}</Button>
+        </div>
+      </Modal>
+
+      <Modal isOpen={!!deleteConfirm} onClose={() => setDeleteConfirm(null)} title="Delete Experience" size="sm">
+        <p className="text-sm text-[var(--color-muted)] mb-6">Are you sure? This cannot be undone.</p>
+        <div className="flex justify-end gap-3">
+          <Button variant="outline" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
+          <Button variant="danger" onClick={() => deleteConfirm && handleDelete(deleteConfirm)}>Delete</Button>
+        </div>
+      </Modal>
+    </div>
+  );
+}
