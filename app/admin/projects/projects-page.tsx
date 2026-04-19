@@ -71,7 +71,7 @@ export default function AdminProjectsPage() {
       screenshots: project.screenshots || [],
       is_featured: project.is_featured,
     });
-    const supabase = createClient();
+    const supabase = createClient()as any;
     const { data } = await supabase
       .from('contributors')
       .select('user_id')

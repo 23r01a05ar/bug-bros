@@ -78,7 +78,7 @@ export default function AdminMembersPage() {
       showToast('Name and email are required', 'error');
       return;
     }
-    const supabase = createClient();
+    const supabase = createClient()as any;
 
     try {
       if (editing) {
