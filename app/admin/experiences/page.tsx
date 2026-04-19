@@ -173,7 +173,6 @@ export default function AdminExperiencesPage() {
             )}
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-3">
             <input type="checkbox" id="is_current" checked={form.is_current} onChange={(e) => setForm({ ...form, is_current: e.target.checked })} className="w-4 h-4" />
             <label htmlFor="is_current" className="text-sm font-medium">Currently working here</label>
           </div>
